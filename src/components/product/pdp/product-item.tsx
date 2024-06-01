@@ -5,6 +5,7 @@ import Gallery from "./gallery";
 import Price from "../price";
 import AddToCart from "../add-to-cart";
 import AmountButton from "../amount-button";
+import { Rating, ThinStar } from "@smastrom/react-rating";
 
 const ProductItemPDP: FC<IProduct> = ({
   title,
@@ -27,7 +28,20 @@ const ProductItemPDP: FC<IProduct> = ({
               <article className="text-sm text-darker-300 leading-[1.8] ">
                 <div className="flx flex-col mb-6 gap-2">
                   <h1 className="text-xl md:text-3xl">{title}</h1>
-                  <small className="text-xs text-gray-500">{category}</small>
+                  <small className="text-xs text-gray-500">
+                    <b>Category:</b> {category}
+                  </small>
+                  <Rating
+                    style={{ maxWidth: 130 }}
+                    value={rating.rate}
+                    transition="zoom"
+                    readOnly
+                    itemStyles={{
+                      itemShapes: ThinStar,
+                      activeFillColor: "#ffb700",
+                      inactiveFillColor: "#fbf1a9",
+                    }}
+                  />
                 </div>
                 <div className="flex flex-col sm:flex-row w-full my-4 gap-0 sm:gap-2">
                   <Price

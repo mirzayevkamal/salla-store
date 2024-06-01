@@ -6,6 +6,7 @@ import { nameShorten } from "@/lib/name-shorten";
 import AddToCart from "../add-to-cart";
 import Link from "next/link";
 import ZoomInOut from "@/components/zoom-in-out";
+import { Rating, ThinStar } from "@smastrom/react-rating";
 
 const ProductItemPLP: FC<IProduct> = ({
   title,
@@ -48,6 +49,17 @@ const ProductItemPLP: FC<IProduct> = ({
             <small className="hidden md-block text-xs w-full text-center">
               {category}
             </small>
+            <Rating
+              style={{ maxWidth: 130 }}
+              value={rating.rate}
+              transition="zoom"
+              readOnly
+              itemStyles={{
+                itemShapes: ThinStar,
+                activeFillColor: "#ffb700",
+                inactiveFillColor: "#fbf1a9",
+              }}
+            />
           </div>
         </div>
         <div className="flex flex-col sm:flex-row items-center justify-center w-full my-4 gap-0 sm:gap-2">

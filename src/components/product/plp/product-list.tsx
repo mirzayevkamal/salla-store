@@ -8,16 +8,20 @@ import ProductItemPLP from "./product-item";
 import SortOrder from "./sort-order";
 import Search from "./search";
 import { usePathname } from "next/navigation";
+import LoadingLogo from "@/components/loading";
 
 const ProductList: FC<{ products?: IProduct[] }> = ({ products }) => {
   const { ref, inView } = useInView();
   const [limit, setLimit] = useState(5);
   const [allProducts, setAllProducts] = useState<IProduct[]>([]);
   const pathName = usePathname();
+  const [loading, setLoading] = useState(false);
 
   const loadMoreProducts = async (sort?: SortOptions) => {
+    setLoading(true);
     const res = await getProducts(limit, sort);
     setAllProducts(res);
+    setLoading(false);
   };
 
   const handleSort = (value: SortOptions) => {
@@ -70,6 +74,12 @@ const ProductList: FC<{ products?: IProduct[] }> = ({ products }) => {
           />
         ))}
       </div>
+      {loading && (
+        <div className="mt-4 flex flex-col items-center">
+          <LoadingLogo width={50} height={50} />
+          <span className="text-sm text-gray-500 mt-2">Loading...</span>
+        </div>
+      )}
       <div className="w-full h-[4px] mt-[150px]" ref={ref}></div>
     </>
   );

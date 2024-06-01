@@ -5,13 +5,22 @@ import SessionWrapper from "@/components/sessionProvider";
 import "../styles/app.scss";
 import "../styles/external/pingartl.scss";
 import "../styles/external/sallaicons.scss";
+import '@smastrom/react-rating/style.css'
 import Footer from "@/components/layout/footer";
-import { headers } from "next/headers";
 import { CartContextProvider } from "@/context/cart-context";
 
 export const metadata: Metadata = {
   title: "Cheapest Online Store",
   description: "Buy the cheapest online products",
+  keywords: "online store, cheapest online store, buy cheap stuff, cheap stuff",
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+    },
+  },
 };
 
 export default async function RootLayout({
