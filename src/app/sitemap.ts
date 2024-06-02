@@ -13,7 +13,7 @@ const baseUrl = process.env.NEXT_PUBLIC_WEBSITE_URL
 export const dynamic = "force-dynamic";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const productsPromise = getProducts().then((products) =>
+  const productsPromise = getProducts(100).then((products) =>
     products.map((product) => ({
       url: `${baseUrl}/product/${product.id}`,
       lastModified: new Date().toISOString(),
