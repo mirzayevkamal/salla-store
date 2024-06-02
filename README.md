@@ -2,7 +2,7 @@
 ENV file not removed for your convenience.
 
 ## Visit live website
-Visit [HERE](https://salla-store-qchmxo2b5-mirzayevkamals-projects.vercel.app/) to see the project live.
+Visit [HERE](https://salla-store-woad.vercel.app/) to see the project live.
 
 ## Login
 Use below username and password to log in
