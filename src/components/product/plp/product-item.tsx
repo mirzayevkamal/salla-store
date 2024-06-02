@@ -4,9 +4,9 @@ import { FC, Suspense } from "react";
 import Price from "../price";
 import { nameShorten } from "@/lib/name-shorten";
 import AddToCart from "../add-to-cart";
-import Link from "next/link";
 import ZoomInOut from "@/components/zoom-in-out";
 import { Rating, ThinStar } from "@smastrom/react-rating";
+import { Link } from "@/navigation";
 
 const ProductItemPLP: FC<IProduct> = ({
   title,

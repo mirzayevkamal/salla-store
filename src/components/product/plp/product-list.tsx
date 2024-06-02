@@ -1,6 +1,6 @@
 "use client";
 
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useEffect, useState, useTransition } from "react";
 import { IProduct, SortOptions } from "@/types/global";
 import { useInView } from "react-intersection-observer";
 import { getProducts } from "@/actions/getProducts";
@@ -9,19 +9,27 @@ import SortOrder from "./sort-order";
 import Search from "./search";
 import { usePathname } from "next/navigation";
 import LoadingLogo from "@/components/loading";
+import { useTranslations } from "next-intl";
 
 const ProductList: FC<{ products?: IProduct[] }> = ({ products }) => {
+  const translate = useTranslations();
   const { ref, inView } = useInView();
   const [limit, setLimit] = useState(5);
   const [allProducts, setAllProducts] = useState<IProduct[]>([]);
   const pathName = usePathname();
-  const [loading, setLoading] = useState(false);
+  const [hasError, setHasError] = useState(false);
+  const [isPending, startTransition] = useTransition();
 
-  const loadMoreProducts = async (sort?: SortOptions) => {
-    setLoading(true);
-    const res = await getProducts(limit, sort);
-    setAllProducts(res);
-    setLoading(false);
+  const loadMoreProducts = (sort?: SortOptions) => {
+    startTransition(async () => {
+      try {
+        const res = await getProducts(limit, sort);
+        setAllProducts(res);
+      } catch (err) {
+        setHasError(true);
+        console.log(err);
+      }
+    });
   };
 
   const handleSort = (value: SortOptions) => {
@@ -43,11 +51,11 @@ const ProductList: FC<{ products?: IProduct[] }> = ({ products }) => {
 
   useEffect(() => {
     const canLoadMore = allProducts.length < 20;
-    if (inView && canLoadMore) {
+    if (inView && canLoadMore && !hasError) {
       loadMoreProducts();
       setLimit((prev) => prev + 5);
     }
-  }, [inView]);
+  }, [inView, hasError]);
 
   return (
     <>
@@ -59,6 +67,13 @@ const ProductList: FC<{ products?: IProduct[] }> = ({ products }) => {
           </div>
         )}
       </div>
+      {hasError && (
+        <div className="mt-4 flex flex-col items-center">
+          <span className="text-sm text-red-500 mt-2">
+            {translate("productGetError")}
+          </span>
+        </div>
+      )}
       <div className="grid md:grid-cols-4 sm:grid-cols-3 grid-cols-2 gap-2 sm:gap-4">
         {(products || allProducts).map((product) => (
           <ProductItemPLP
@@ -74,10 +89,12 @@ const ProductList: FC<{ products?: IProduct[] }> = ({ products }) => {
           />
         ))}
       </div>
-      {loading && (
+      {isPending && (
         <div className="mt-4 flex flex-col items-center">
           <LoadingLogo width={50} height={50} />
-          <span className="text-sm text-gray-500 mt-2">Loading...</span>
+          <span className="text-sm text-gray-500 mt-2">
+            {translate("loading")}...
+          </span>
         </div>
       )}
       <div className="w-full h-[4px] mt-[150px]" ref={ref}></div>

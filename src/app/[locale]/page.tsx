@@ -1,8 +1,11 @@
 import ProductList from "@/components/product/plp/product-list";
 import Slider from "@/components/slider";
-import { Suspense } from "react";
 
-export default async function Home() {
+export default async function Home({
+  params: { locale },
+}: {
+  params: { locale: string };
+}) {
   return (
     <main className="w-full main flex-auto">
       <div className="container">

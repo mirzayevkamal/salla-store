@@ -3,6 +3,7 @@
 import { ErrorMessage } from "@hookform/error-message";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { signIn } from "next-auth/react";
+import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import Notiflix from "notiflix";
 import { useEffect, useState } from "react";
@@ -22,9 +23,11 @@ const loginSchema = object().shape({
 export default function SignIn() {
   const router = useRouter();
   const [fullPath, setFullPath] = useState("");
+  const translate = useTranslations();
 
   useEffect(() => {
     if (window !== undefined) {
+      console.log('window.location.href', window.location.href)
       setFullPath(window.location.href.split("=")[1] || "/");
     }
   }, []);
@@ -40,7 +43,7 @@ export default function SignIn() {
   const onSubmit = async (data: { username: string; password: string }) => {
     const status = await signIn("credentials", {
       redirect: false,
-      callbackUrl: "http://localhost:3000",
+      callbackUrl: process.env.NEXT_PUBLIC_WEBSITE_URL || "/",
       ...data,
     });
 
@@ -55,7 +58,7 @@ export default function SignIn() {
       <div className="p-2 sm:p-4 bg-white rounded-lg shadow-4xl sm:max-w-[700px] mx-auto">
         <div className="flex flex-col text-center items-center justify-center mb-6">
           <h2 className="text-lg">GOAT Store</h2>
-          <span className="text-xs text-gray-500">Log in to your account</span>
+          <span className="text-xs text-gray-500">{translate('loginText')}</span>
         </div>
         <form
           onSubmit={handleSubmit(onSubmit)}
@@ -66,7 +69,7 @@ export default function SignIn() {
               type="text"
               {...register("username")}
               className="w-full p-2 bg-white appearance-none rounded-md border text-md"
-              placeholder="Username"
+              placeholder={translate("username")}
             />
             <div className="text-xs text-red-500">
               <ErrorMessage errors={errors} name="username" />
@@ -78,7 +81,7 @@ export default function SignIn() {
               type="password"
               {...register("password")}
               className="w-full p-2 bg-white appearance-none rounded-md border text-md"
-              placeholder="Password"
+              placeholder={translate("password")}
             />
             <div className="text-xs text-red-500">
               <ErrorMessage errors={errors} name="password" />
@@ -89,13 +92,13 @@ export default function SignIn() {
               type="submit"
               className="w-full bg-primary text-secondary flex-1 p-2 text-md rounded-md"
             >
-              Login
+              {translate("login")}
             </button>
             <a
               type="submit"
               className="w-fit text-primary underline p-2 text-md rounded-md"
             >
-              Forgot password?
+              {translate("forgotPassword")}
             </a>
           </div>
         </form>

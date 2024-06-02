@@ -1,13 +1,20 @@
 "use client";
 import { signOut, useSession } from "next-auth/react";
+import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { FC } from "react";
 
-const ProfilePage: FC = () => {
+const ProfilePage: FC<{
+  params: { locale: string };
+}> = ({ params: { locale } }) => {
   const session = useSession();
   const router = useRouter();
+  const translate = useTranslations();
+
   const handleLogout = () => {
-    signOut();
+    signOut({
+      callbackUrl: `/${locale}/auth/signin`,
+    });
   };
 
   if (session.status === "loading") {
@@ -20,23 +27,23 @@ const ProfilePage: FC = () => {
   }
 
   return (
-    <div>
-      <h1 className="text-3xl mb-4">Profile</h1>
+    <>
+      <h1 data-testid="profile-title" className="text-3xl mb-4">{translate("profile")}</h1>
       <div>
         <p>
-          Logged in as <b>{session.data?.user?.name}</b>
+          {translate("loggedInAs")} <b>{session.data?.user?.name}</b>
         </p>
         <p>
-          Email: <b>{session.data?.user?.email}</b>
+          {translate("email")}: <b>{session.data?.user?.email}</b>
         </p>
       </div>
       <button
         className="rounded mt-6 text-white py-2 px-4 bg-primary"
         onClick={handleLogout}
       >
-        Log out
+        {translate("logout")}
       </button>
-    </div>
+    </>
   );
 };
 

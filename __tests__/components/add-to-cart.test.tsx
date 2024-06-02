@@ -1,6 +1,7 @@
 import AddToCart from "@/components/product/add-to-cart";
 import { IProduct } from "@/types/global";
 import { render, screen } from "@testing-library/react";
+import { NextIntlClientProvider } from "next-intl";
 import { usePathname } from "next/navigation";
 
 jest.mock("next-auth/react");
@@ -28,7 +29,12 @@ describe("Add to cart component", () => {
       },
       quantity: 1,
     };
-    render(<AddToCart product={product} quantity={1} />);
+    const messages = require(`../../messages/en.json`);
+    render(
+      <NextIntlClientProvider messages={messages} locale="en">
+        <AddToCart product={product} quantity={1} />
+      </NextIntlClientProvider>
+    );
     const button = screen.getByRole("button");
     expect(button).toBeInTheDocument();
   });

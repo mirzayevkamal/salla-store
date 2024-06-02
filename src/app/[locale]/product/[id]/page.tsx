@@ -1,9 +1,9 @@
 import ProductItemPDP from "@/components/product/pdp/product-item";
-import ProductItem from "@/components/product/pdp/product-item";
 import { getProductData } from "@/lib/get-products";
 import { IProduct } from "@/types/global";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
 
 export async function generateMetadata({
   params,
@@ -11,19 +11,30 @@ export async function generateMetadata({
   params: { id: string };
 }): Promise<Metadata> {
   const product = await getProductData(params.id);
-
-  if (!product) return notFound();
+  if (!product) return {};
 
   return {
-    title: product.title,
-    description: product.description || product.description,
-    keywords: product.title,
+    metadataBase: new URL(
+      process.env.NEXT_PUBLIC_WEBSITE_URL || "http://localhost:3000",
+      process.env.NEXT_PUBLIC_WEBSITE_URL || "http://localhost:3000"
+    ),
+    title: product.title || "",
+    description: product.description || product.description || "",
+    keywords:
+      "online store, cheapest online store, buy cheap stuff, cheap stuff",
     robots: {
       index: true,
       follow: true,
       googleBot: {
         index: true,
         follow: true,
+      },
+    },
+    alternates: {
+      canonical: `/product/${product.id}`,
+      languages: {
+        "en-US": `/en/product/${product.id}`,
+        "ar-SA": `/ar/product/${product.id}`,
       },
     },
     openGraph: product
@@ -44,6 +55,7 @@ export default async function ProductPage({
   params: { id: string };
 }) {
   const product: IProduct | null = await getProductData(params.id);
+  if (!product) return notFound();
 
   const productJsonLd = {
     "@context": "https://schema.org",
@@ -53,11 +65,8 @@ export default async function ProductPage({
     image: product?.image,
   };
 
-  if (!product) {
-    return null;
-  }
   return (
-    <>
+    <Suspense fallback={<div>Loading...</div>}>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -76,6 +85,6 @@ export default async function ProductPage({
           quantity={product.quantity}
         />
       </div>
-    </>
+    </Suspense>
   );
 }

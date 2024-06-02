@@ -4,16 +4,12 @@ import { IProduct } from "@/types/global";
 
 export const getProducts = async (limit?: number, sort?: string) => {
   try {
-    const sortQuery = sort?.length ? `&sort=${sort}` : "";
-    const limitQuery = limit ? `?limit=${limit}` : "";
-
-    console.log("sortQuery", typeof sort);
-    console.log("limitQuery", typeof limit);
+    const sortQuery = `&sort=${sort || "asc"}`;
+    const limitQuery = `?limit=${limit || 5}`;
 
     const res = await fetch(
       `https://fakestoreapi.com/products${limitQuery}${sortQuery}`,
       {
-        cache: "no-store",
         method: "GET",
       }
     );

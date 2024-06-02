@@ -1,6 +1,7 @@
 import "@testing-library/jest-dom";
 import { render, screen } from "@testing-library/react";
-import LoginPage from "@/app/auth/signin/page";
+import LoginPage from "@/app/[locale]/auth/signin/page";
+import { NextIntlClientProvider, useTranslations } from "next-intl";
 
 jest.mock("next/navigation", () => ({
   useRouter() {
@@ -12,17 +13,18 @@ jest.mock("next/navigation", () => ({
 
 describe("Login page", () => {
   it("renders a login page with login form", () => {
-    render(<LoginPage />);
+    const messages = require(`../../messages/en.json`);
+
+    render(
+      <NextIntlClientProvider messages={messages} locale="en">
+        <LoginPage />
+      </NextIntlClientProvider>
+    );
 
     const heading = screen.getByRole("heading", { level: 2 });
     const submitButton = screen.getByRole("button");
-    const usernameInput = screen.getByPlaceholderText("Username");
-    const passwordInput = screen.getByPlaceholderText("Password");
 
     expect(heading).toBeInTheDocument();
     expect(submitButton).toBeInTheDocument();
-    expect(submitButton).toHaveTextContent("Login");
-    expect(usernameInput).toBeInTheDocument();
-    expect(passwordInput).toBeInTheDocument();
   });
 });

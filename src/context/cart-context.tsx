@@ -1,6 +1,7 @@
 "use client";
 import { IProduct } from "@/types/global";
 import { useSession } from "next-auth/react";
+import { useTranslations } from "next-intl";
 import Notiflix from "notiflix";
 import { FC, createContext, useEffect, useState } from "react";
 
@@ -27,6 +28,7 @@ export const CartContextProvider: FC<{ children: React.ReactNode }> = ({
 }) => {
   const [cartItems, setCartItems] = useState<IProduct[]>([]);
   const [cartItemsCount, setCartItemsCount] = useState(0);
+  const translate = useTranslations();
   const session = useSession();
   const addToCart = (product: IProduct, quantity: number) => {
     //Check if item is already in cart
@@ -41,7 +43,7 @@ export const CartContextProvider: FC<{ children: React.ReactNode }> = ({
     localStorage.setItem("cart", JSON.stringify(cart));
     setCartItems(cart);
     //Show notification
-    Notiflix.Notify.success("Item added to cart", {
+    Notiflix.Notify.success(translate("addToCartSuccess"), {
       position: "right-bottom",
       timeout: 800,
     });

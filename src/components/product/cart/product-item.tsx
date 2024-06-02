@@ -1,11 +1,11 @@
 import { IProduct } from "@/types/global";
 import Image from "next/image";
-import Link from "next/link";
 import { FC } from "react";
 import Price from "../price";
 import CartAmountButton from "./amount-button";
 import DeleteButton from "./delete-button";
 import { AnimatePresence, motion } from "framer-motion";
+import { Link } from "@/navigation";
 
 const CartItem: FC<IProduct> = ({ title, price, image, id, quantity }) => {
   return (

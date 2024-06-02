@@ -6,6 +6,7 @@ import Price from "../price";
 import AddToCart from "../add-to-cart";
 import AmountButton from "../amount-button";
 import { Rating, ThinStar } from "@smastrom/react-rating";
+import { useTranslations } from "next-intl";
 
 const ProductItemPDP: FC<IProduct> = ({
   title,
@@ -18,6 +19,7 @@ const ProductItemPDP: FC<IProduct> = ({
 }) => {
   const [quantity, setQuantity] = useState(1);
   const handleSetQuantity = (value: number) => setQuantity(value);
+  const translate = useTranslations();
   return (
     <main className="w-full main flex-auto">
       <div className="container">
@@ -29,7 +31,7 @@ const ProductItemPDP: FC<IProduct> = ({
                 <div className="flx flex-col mb-6 gap-2">
                   <h1 className="text-xl md:text-3xl">{title}</h1>
                   <small className="text-xs text-gray-500">
-                    <b>Category:</b> {category}
+                    <b>{translate("category")}:</b> {category}
                   </small>
                   <Rating
                     style={{ maxWidth: 130 }}

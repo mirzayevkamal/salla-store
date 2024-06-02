@@ -1,9 +1,10 @@
 "use client";
+import LocaleSwitcher from "@/components/locale-switcher";
 import Logo from "@/components/logo";
 import MagneticWrapper from "@/components/magnetic-wrapper";
 import { CartContext } from "@/context/cart-context";
+import { Link } from "@/navigation";
 import { useSession } from "next-auth/react";
-import Link from "next/link";
 import { useContext } from "react";
 
 const Navbar = () => {
@@ -33,6 +34,7 @@ const Navbar = () => {
               </div>
             </div>
             <nav className="flex items-center gap-4">
+              <LocaleSwitcher />
               {session.status === "authenticated" ? (
                 <Link
                   className="w-[40px] h-[40px] rounded-full text-center flex items-center justify-center bg-secondary-50 text-primary"

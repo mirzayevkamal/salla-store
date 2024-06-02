@@ -2,11 +2,13 @@
 import { IProduct } from "@/types/global";
 import clsx from "clsx";
 import { useSession } from "next-auth/react";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { FC, useContext, useState } from "react";
 import Notiflix from "notiflix";
 import { CartContext } from "@/context/cart-context";
 import { replicateAsync } from "@/lib/async-replicate";
+import { useTranslations } from "next-intl";
+import { useRouter } from "@/navigation";
 
 const AddToCart: FC<{
   className?: string;
@@ -17,14 +19,15 @@ const AddToCart: FC<{
   const router = useRouter();
   const pathname = usePathname();
   const { addToCart } = useContext(CartContext);
+  const translate = useTranslations();
   const [isLoading, setIsLoading] = useState(false);
 
   const handleAddToCart = async () => {
     //Check if user is logged in
     if (session.status === "unauthenticated") {
-      Notiflix.Notify.info("Please login to add items to cart");
+      Notiflix.Notify.info(translate("logInWarning"));
       setTimeout(() => {
-        router.push(`/auth/signin?redirect=${pathname}`);
+        router.replace(`/auth/signin`);
       }, 500);
       return;
     } else {
@@ -52,10 +55,10 @@ const AddToCart: FC<{
         {isLoading ? (
           <div className="flex gap-2 items-center justify-center">
             <i className="sicon-spinner animate-spin mb-[2px]"></i>
-            <span>Adding...</span>
+            <span>{translate("adding")}...</span>
           </div>
         ) : (
-          "Add to cart"
+          translate("addToCart")
         )}
       </div>
     </button>
